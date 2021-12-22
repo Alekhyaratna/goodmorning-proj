@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<http:listener doc:name="/goodmorning" doc:id="96071d0e-51fd-4525-beb4-9019c79e1c3a" config-ref="HTTP_Listener_config" path="/goodmorning"/>
 		<set-variable value="#[uuid()]" doc:name="CorrelationId" doc:id="957d963e-b5a1-47ba-a696-cabe092e5d87" variableName="CorrelationId"/>
 		<logger level="INFO" doc:name="Displaying CorrelationId" doc:id="fc449728-a5ee-4a0d-9993-0691528be524" message="CorreationId- #[vars.CorrelationId]"/>
-		<logger level="INFO" doc:name="Logger" doc:id="8c69ecbd-2d34-4c0f-9169-1fe73ac49bf0" message="CorrelationId- #[vars.CorrelationId] - recieved payload- #[payload]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="8c69ecbd-2d34-4c0f-9169-1fe73ac49bf0" message="CorrelationId- #[vars.CorrelationId] - recieved payload- #[payload] -- hi"/>
 		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="4bec1740-e2f0-42ec-a57c-d3b83ecdb89b" variableName="originalPayload"/>
 		<ee:transform doc:name="Transform Message" doc:id="de686d15-67ea-4004-8477-4c45dbe764e5">
 			<ee:message>
