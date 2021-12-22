@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5fc17d73-7429-48e9-8650-1baf64ad2168" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="goodmorning-alekhyaFlow" doc:id="334fd6d1-b79d-4ce3-b0a4-a9ca4c006436" >
+		<http:listener doc:name="/goodmorning" doc:id="96071d0e-51fd-4525-beb4-9019c79e1c3a" config-ref="HTTP_Listener_config" path="/goodmorning"/>
+		<set-variable value="#[uuid()]" doc:name="CorrelationId" doc:id="957d963e-b5a1-47ba-a696-cabe092e5d87" variableName="CorrelationId"/>
+		<logger level="INFO" doc:name="Displaying CorrelationId" doc:id="fc449728-a5ee-4a0d-9993-0691528be524" message="CorreationId- #[vars.CorrelationId]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="8c69ecbd-2d34-4c0f-9169-1fe73ac49bf0" message="CorrelationId- #[vars.CorrelationId] - recieved payload- #[payload]"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="4bec1740-e2f0-42ec-a57c-d3b83ecdb89b" variableName="originalPayload"/>
+		<ee:transform doc:name="Transform Message" doc:id="de686d15-67ea-4004-8477-4c45dbe764e5">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="counter" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"count" : "1"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="6bc4bdcc-be96-4606-8577-63e8c64a68f3" message="Converted payload to xml - #[payload] &amp; Counter - #[vars.counter]"/>
+		<set-payload value="Good morning alekhya!" doc:name="Set Payload" doc:id="c7f0cb44-908b-484a-b5f1-abf6f297d00a" />
+		<flow-ref doc:name="Flow Reference" doc:id="3d375892-b7cc-4130-97ee-660ce2128a43" name="goodmorning-alekhyaFlow1" target="123xyz"/>
+		<flow-ref doc:name="Flow Reference" doc:id="151a3b9f-39c1-4a9a-927a-f5fd640830b6" name="goodmorning-alekhyaSub_Flow" target="123"/>
+		<logger level="INFO" doc:name="Logging" doc:id="38b400ab-182f-41a0-ac04-c68f5d740ab8" message="CorreationId- #[vars.CorrelationId]- #[payload]"/>
+	</flow>
+	<flow name="goodmorning-alekhyaFlow1" doc:id="62bc2b39-6375-46e0-9dfe-4c2f07fd0b94" >
+		<set-payload value="Private flow triggered" doc:name="Set Payload for privateflow" doc:id="8fc57bcc-5237-4262-996a-7d908ccc083c" />
+		<logger level="INFO" doc:name="goodmorning-alekhyaFlow1" doc:id="312d3f4c-85cc-4e20-8c0e-e537ca3fb60b" message="CorreationId- #[vars.CorrelationId]- #[payload]"/>
+	</flow>
+	<sub-flow name="goodmorning-alekhyaSub_Flow" doc:id="1f3fc66f-2b73-4bbe-a8d3-1f5e03e95044" >
+		<set-payload value="subflow triggered" doc:name="Set Payload subflow" doc:id="0952fe58-bb07-4672-9f44-fda6ad5b71b7" />
+		<logger level="INFO" doc:name="goodmorning-alekhyaSub_Flow" doc:id="13da1ad6-57a7-421e-bead-6d4c2c5df151" message="CorreationId- #[vars.CorrelationId]- #[payload]"/>
+	</sub-flow>
+</mule>
